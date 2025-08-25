@@ -3,6 +3,7 @@ import { ProductCarouselcard } from "@/types";
 import React from "react";
 import ProductCarouselCard from "./ProductCarouselCard";
 import Slider from "react-slick";
+import Link from "next/link";
 
 type Props = {
   data: ProductCarouselcard[];
@@ -10,10 +11,11 @@ type Props = {
 };
 
 function ProductCarousel({ data, category }: Props) {
+  console.log("🚀 ~ ProductCarousel ~ data:", data)
   const settings = {
     className: "center",
     centerMode: true,
-    infinite: true,
+    infinite: data.length > 4,
     centerPadding: "30px",
     slidesToShow: 4,
     speed: 500,
@@ -62,12 +64,18 @@ function ProductCarousel({ data, category }: Props) {
       </h2>
       <Slider {...settings}>
         {data.map((product, index) => (
-          <div key={index} className="flex-shrink-0">
+          <div key={index} className="flex-shrink-0 flex">
+            
+            <Link 
+            //@ts-ignore
+            href={`/product/${product._id}`}>
             <ProductCarouselCard
-              href={product.href}
-              title={product.title}
+            //@ts-ignore
+              href={product.images[0]}
+              name={product.name}
               price={product.price}
             />
+            </Link>
           </div>
         ))}
       </Slider>

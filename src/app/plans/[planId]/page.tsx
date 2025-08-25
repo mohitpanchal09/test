@@ -11,7 +11,7 @@ async function page({
   console.log("🚀 ~ page ~ params:", params)
   return (
     <div>
-      <ProductDetails />
+      {/* <ProductDetails /> */}
     </div>
   );
 }

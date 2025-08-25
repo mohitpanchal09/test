@@ -27,7 +27,7 @@ export type CategoryCardProps = {
 
 export type ProductCarouselcard = {
   href: string;
-  title: string;
+  name: string;
   price: number;
 };
 

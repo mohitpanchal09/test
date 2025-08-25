@@ -5,6 +5,7 @@ import ProductCarouselCard from "@/components/custom/Products/ProductCarouselCar
 import ScrollingText from "@/components/custom/ScrollingText/ScrollingText";
 import { bannerCarouselData } from "@/lib/bannerData";
 import { productCarouselData } from "@/lib/productsCarouselData";
+import { fetchCategoriesWithProducts } from "@/services/productService";
 import React from "react";
 
 type Props = {};
@@ -17,7 +18,8 @@ function Title() {
   );
 }
 
-function Page({}: Props) {
+async function Page({}: Props) {
+  const res = await fetchCategoriesWithProducts()
   return (
     <div className="overflow-hidden">
       <BannerCarousel banners={bannerCarouselData} />
@@ -34,26 +36,7 @@ function Page({}: Props) {
 
       <Categories />
 
-      <ProductCarousel data={productCarouselData} category="Juices" />
-
-      <ProductCarousel data={productCarouselData} category="Smoothies" />
-
-      <div className="flex flex-col justify-center items-center py-12 ">
-        <h2 className="text-2xl md:text-4xl font-bold text-black mb-8">
-          {"Omega-3 Fortified Chocolates"}
-        </h2>
-        <div className="relative">
-          <ProductCarouselCard
-            title="Omega-3 Fortified Chocolates"
-            href="/assets/products/juice.png"
-            price={125}
-          />
-        </div>
-      </div>
-
-      <ProductCarousel data={productCarouselData} category="Herbal Teas" />
-
-      <ProductCarousel data={productCarouselData} category="Desserts" />
+      {res.map((item:any)=><ProductCarousel data={item.products} category={item.category.name} />)}
     </div>
   );
 }

@@ -1,20 +1,24 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 interface Product {
-  id: number;
+  _id: string;
   name: string;
   price: number;
-  image: string;
-  color: string;
+  images: string[];
 }
 
-const RelatedProducts: React.FC = () => {
+interface RelatedProductsProps {
+  products: Product[];
+}
+
+const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);
-  
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -25,59 +29,24 @@ const RelatedProducts: React.FC = () => {
         setItemsPerView(3);
       }
     };
-    
+
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const products: Product[] = [
-    {
-      id: 1,
-      name: "Strawberry Smoothie",
-      price: 110,
-      image: "https://images.pexels.com/photos/775032/pexels-photo-775032.jpeg?auto=compress&cs=tinysrgb&w=300",
-      color: "bg-pink-200"
-    },
-    {
-      id: 2,
-      name: "Berry Blast Smoothie",
-      price: 125,
-      image: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=300",
-      color: "bg-purple-200"
-    },
-    {
-      id: 3,
-      name: "Mango Delight",
-      price: 115,
-      image: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=300",
-      color: "bg-orange-200"
-    },
-    {
-      id: 4,
-      name: "Green Power Smoothie",
-      price: 130,
-      image: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=300",
-      color: "bg-green-200"
-    },
-    {
-      id: 5,
-      name: "Tropical Paradise",
-      price: 135,
-      image: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=300",
-      color: "bg-yellow-200"
-    }
-  ];
+  if (!products || products.length === 0) {
+    return null; // Don't show the section if no related products
+  }
 
-  // Calculate maxIndex based on whether products can be perfectly divided by itemsPerView
   const maxIndex = Math.max(0, Math.ceil(products.length / itemsPerView) - 1);
-  
+
   const nextSlide = () => {
-    setCurrentIndex(prev => (prev < maxIndex ? prev + 1 : prev));
+    setCurrentIndex((prev) => (prev < maxIndex ? prev + 1 : prev));
   };
-  
+
   const prevSlide = () => {
-    setCurrentIndex(prev => (prev > 0 ? prev - 1 : 0));
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
   };
 
   return (
@@ -93,8 +62,8 @@ const RelatedProducts: React.FC = () => {
             disabled={currentIndex === 0}
             className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-200 ${
               currentIndex === 0
-                ? 'opacity-50 cursor-not-allowed'
-                : 'hover:bg-gray-50 hover:shadow-xl'
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-50 hover:shadow-xl"
             }`}
           >
             <ChevronLeft size={24} className="text-gray-600" />
@@ -104,40 +73,56 @@ const RelatedProducts: React.FC = () => {
             disabled={currentIndex >= maxIndex}
             className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-200 ${
               currentIndex >= maxIndex
-                ? 'opacity-50 cursor-not-allowed'
-                : 'hover:bg-gray-50 hover:shadow-xl'
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-50 hover:shadow-xl"
             }`}
           >
             <ChevronRight size={24} className="text-gray-600" />
           </button>
+
           {/* Products Container */}
           <div className="overflow-hidden mx-4 md:mx-16">
             <div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
+              className="flex justify-center transition-transform duration-300 ease-in-out"
+              style={{
+                transform: `translateX(-${
+                  currentIndex * (100 / itemsPerView)
+                }%)`,
+              }}
             >
               {products.map((product) => (
                 <div
-                  key={product.id}
-                  className={`flex-shrink-0 ${itemsPerView === 1 ? 'w-full' : 'w-1/2'} ${itemsPerView === 3 ? 'lg:w-1/4' : ''} px-4`}
+                  key={product._id}
+                  className={`flex-shrink-0 ${
+                    itemsPerView === 1 ? "w-full" : "w-1/2"
+                  } ${itemsPerView === 3 ? "lg:w-1/4" : ""} px-4`}
                 >
-                  <div className="bg-white hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer">
+                  <div className="bg-white border rounded-xl hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer">
                     {/* Product Image */}
-                    <div className={`${product.color} flex items-center justify-center relative overflow-hidden`}>
+                    <div className="flex items-center justify-center relative overflow-hidden bg-gray-100">
                       <Image
-                        src={product.image}
+                        src={product.images[0]}
                         alt={product.name}
-                        width={100}
-                        height={100}
-                        className="w-100 h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        width={300}
+                        height={200}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                   
+                    {/* Product Info */}
+                    <div className="p-4 text-center">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {product.name}
+                      </h3>
+                      <p className="text-green-600 font-medium">
+                        ₹{product.price}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+
           {/* Mobile Navigation Dots */}
           <div className="flex justify-center mt-8 space-x-2 lg:hidden">
             {Array.from({ length: maxIndex + 1 }).map((_, index) => (
@@ -146,8 +131,8 @@ const RelatedProducts: React.FC = () => {
                 onClick={() => setCurrentIndex(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-200 ${
                   index === currentIndex
-                    ? 'bg-green-600'
-                    : 'bg-gray-300 hover:bg-gray-400'
+                    ? "bg-green-600"
+                    : "bg-gray-300 hover:bg-gray-400"
                 }`}
               />
             ))}
