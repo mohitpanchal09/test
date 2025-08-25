@@ -13,7 +13,7 @@ interface CartItemType {
   quantity: number;
   image: string;
 }
-function page({}: CartItemType) {
+function page() {
   const [cartItems, setCartItems] = useState<CartItemType[]>([
     {
       id: "1",
