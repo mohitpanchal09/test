@@ -1,4 +1,4 @@
-// components/customized-diets/VegNonVegSection.tsx
+"use client"
 import React from "react";
 import Image from "next/image";
 import DietCard from "./DietCard";
@@ -6,6 +6,7 @@ import { cards } from "@/lib/dietData";
 import { Button } from "@/components/ui/button";
 
 export default function VegNonVegSection() {
+  const [selected, setSelected] = React.useState<"veg" | "non-veg">("veg");
   return (
     <div className="relative w-full mt-8 flex flex-col items-center">
       {/* Desktop */}
@@ -22,10 +23,11 @@ export default function VegNonVegSection() {
           <div className="flex justify-between items-center w-full mb-6 sm:mb-10">
             <div className="flex-1 text-white text-xl sm:text-3xl font-bold flex items-center justify-center">
               <Button
-                className="cursor-pointer text-lg min-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg border border-white flex items-center"
+                className={`cursor-pointer text-lg min-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg border border-white flex items-center ${selected === "veg" ? "bg-white/20" : ""}`}
                 style={{
                   background: "rgba(255, 255, 255, 0.10)",
                 }}
+                onClick={() => setSelected("veg")}
               >
                 Veg
               </Button>
@@ -33,10 +35,11 @@ export default function VegNonVegSection() {
                         <div className="flex-1 text-white text-xl sm:text-3xl font-bold flex items-center justify-center">
 
              <Button
-                className="flex-1 cursor-pointer text-lg max-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg border border-white flex items-center"
+                className={`flex-1 cursor-pointer text-lg max-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg border border-white flex items-center ${selected === "non-veg" ? "bg-white/20" : ""}`}
                 style={{
                   background: "rgba(255, 255, 255, 0.10)",
                 }}
+                onClick={() => setSelected("non-veg")}
               >
                 Non-Veg
               </Button>
