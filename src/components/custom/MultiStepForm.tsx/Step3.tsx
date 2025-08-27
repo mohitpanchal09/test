@@ -1,35 +1,93 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ShoppingCart } from "lucide-react";
 import OptionButton from "./OptionButton";
 import StepIndicator from "./StepIndicator";
+import { useFormStore } from "@/store/useFormStore";
+import { useMealSubscriptionsStore } from "@/store/useMealSubscriptionStore";
 
-interface Step3Props {
-  selectedDuration: string | null;
-  selectedMeals: string | null;
-  selectedDietType: string | null;
-  selectedMealType: string[];
-  onDurationSelect: (duration: string) => void;
-  onMealsSelect: (meals: string) => void;
-  onDietTypeSelect: (type: string) => void;
-  onMealTypeSelect: (type: string) => void;
-  onBack: () => void;
-  onNext: () => void;
-}
+const Step3: React.FC = () => {
+  const {
+    formData: {
+      duration: selectedDuration,
+      meals: selectedMeals,
+      dietType: selectedDietType,
+      mealType: selectedMealType,
+    },
+    setDuration,
+    setMeals,
+    setDietType,
+    toggleMealType,
+    prevStep,
+    nextStep,
+  } = useFormStore();
 
-const Step3: React.FC<Step3Props> = ({
-  selectedDuration,
-  selectedMeals,
-  selectedDietType,
-  selectedMealType,
-  onDurationSelect,
-  onMealsSelect,
-  onDietTypeSelect,
-  onMealTypeSelect,
-  onBack,
-  onNext,
-}) => {
+  const { subscriptions } = useMealSubscriptionsStore();
+
+  // ---------------- PRICE CALCULATION ----------------
+  const price = useMemo(() => {
+    if (
+      !selectedDuration ||
+      !selectedMeals ||
+      !selectedDietType ||
+      selectedMealType.length === 0
+    ) {
+      return 0;
+    }
+
+    // Find active subscription (assuming single subscription for now)
+    const subscription = subscriptions.find(
+      (sub) =>
+        sub.cluster_id?._id ===
+        useFormStore.getState().formData.selectedClusterId
+    );
+    console.log("🚀 ~ Step3 ~ subscription:", subscription);
+    if (!subscription) return 0;
+
+    // Find matching duration pricing
+    const durationPricing = subscription.duration_pricing.find((d) => {
+      if (selectedDuration === "3d")
+        return d.duration_value === 3 && d.duration_type === "days";
+      if (selectedDuration === "2w")
+        return d.duration_value === 2 && d.duration_type === "weeks";
+      if (selectedDuration === "4w")
+        return d.duration_value === 4 && d.duration_type === "weeks";
+      return false;
+    });
+
+    if (!durationPricing) return 0;
+
+    // Base meal price calculation
+    const totalMeals =
+      parseInt(selectedMeals) *
+      durationPricing.duration_value *
+      (durationPricing.duration_type === "weeks" ? 7 : 1);
+    const dietKey =
+      selectedDietType === "vegetarian"
+        ? "veg"
+        : selectedDietType === "non_vegetarian"
+        ? "non_veg"
+        : "egg"; // mapping eggetarian → egg
+
+    let basePrice = 0;
+    selectedMealType.forEach((mealTime) => {
+      const mealPrice =
+        durationPricing.meal_time_pricing[mealTime]?.[dietKey] || 0;
+      basePrice +=
+        mealPrice * (parseInt(selectedMeals) / selectedMealType.length); // distribute meals
+    });
+
+    return basePrice;
+  }, [
+    subscriptions,
+    selectedDuration,
+    selectedMeals,
+    selectedDietType,
+    selectedMealType,
+  ]);
+
+  // ---------------- UI Options ----------------
   const durations = [
     { label: "3 Days Trial", value: "3d" },
     { label: "2 Weeks", value: "2w" },
@@ -42,14 +100,14 @@ const Step3: React.FC<Step3Props> = ({
     { label: "4 Meals", value: "4" },
   ];
   const dietTypes = [
-    { label: "Vegetarian", value: "vegetarian" },
-    { label: "Non Vegetarian", value: "non_vegetarian" },
-    { label: "Eggetarian", value: "eggetarian" },
+    { label: "Vegetarian", value: "veg" },
+    { label: "Non Vegetarian", value: "non_veg" },
+    { label: "Eggetarian", value: "egg" },
   ];
   const mealTypes = [
     { label: "Breakfast", value: "breakfast" },
     { label: "Lunch", value: "lunch" },
-    { label: "Evening Snack", value: "evening_snack" },
+    { label: "Evening Snack", value: "evening" },
     { label: "Dinner", value: "dinner" },
   ];
 
@@ -60,6 +118,7 @@ const Step3: React.FC<Step3Props> = ({
     return selectedDuration;
   };
 
+  // ---------------- RENDER ----------------
   return (
     <div className="flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <motion.div
@@ -77,163 +136,99 @@ const Step3: React.FC<Step3Props> = ({
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-left mb-2">
           Make your Plan!
         </h1>
+
+        {/* ---------------- SELECTIONS ---------------- */}
         <div className="space-y-6 sm:space-y-8">
-          {/* Duration Selection */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          {/* Duration */}
+          <motion.div>
             <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">
               How many days you want to subscribe?
             </h2>
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1,
-                  },
-                },
-              }}
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {durations.map((duration, i) => (
-                <motion.div key={i} variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
-                  <OptionButton
-                    label={duration.label}
-                    isSelected={selectedDuration === duration.value}
-                    onClick={() => onDurationSelect(duration.value)}
-                  />
-                </motion.div>
+                <OptionButton
+                  key={i}
+                  label={duration.label}
+                  isSelected={selectedDuration === duration.value}
+                  onClick={() => setDuration(duration.value)}
+                />
               ))}
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Meals per day - shown after duration selection */}
+          {/* Meals */}
           {selectedDuration && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
+            <motion.div>
               <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">
                 How many meals per day?
               </h2>
               <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
                 {getSelectedDurationText()}
               </p>
-              <motion.div
-                className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1,
-                    },
-                  },
-                }}
-              >
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                 {mealCounts.map((meal, i) => (
-                  <motion.div key={i} variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
-                    <OptionButton
-                      label={meal.label}
-                      isSelected={selectedMeals === meal.value}
-                      onClick={() => onMealsSelect(meal.value)}
-                      variant="small"
-                    />
-                  </motion.div>
+                  <OptionButton
+                    key={i}
+                    label={meal.label}
+                    isSelected={selectedMeals === meal.value}
+                    onClick={() => setMeals(meal.value)}
+                    variant="small"
+                  />
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
           )}
 
-          {/* Diet type - shown after meal selection */}
+          {/* Diet */}
           {selectedMeals && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
+            <motion.div>
               <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">
                 Are you Vegetarian or Non Vegetarian?
               </h2>
               <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
-                {getSelectedDurationText()} | {selectedMeals} {selectedMeals === "1" ? "meal" : "meals"}
+                {getSelectedDurationText()} | {selectedMeals}{" "}
+                {selectedMeals === "1" ? "meal" : "meals"}
               </p>
-              <motion.div
-                className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1,
-                    },
-                  },
-                }}
-              >
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 {dietTypes.map((type, i) => (
-                  <motion.div key={i} variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
-                    <OptionButton
-                      label={type.label}
-                      isSelected={selectedDietType === type.value}
-                      onClick={() => onDietTypeSelect(type.value)}
-                    />
-                  </motion.div>
+                  <OptionButton
+                    key={i}
+                    label={type.label}
+                    isSelected={selectedDietType === type.value}
+                    onClick={() => setDietType(type.value)}
+                  />
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
           )}
 
-          {/* Meal type selection - shown after diet type selection */}
+          {/* Meal Types */}
           {selectedDietType && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
+            <motion.div>
               <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">
-                Choose your {selectedMeals} {selectedMeals === "1" ? "meal" : "meals"} for each day!
+                Choose your {selectedMeals}{" "}
+                {selectedMeals === "1" ? "meal" : "meals"} for each day!
               </h2>
-              <motion.div
-                className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1,
-                    },
-                  },
-                }}
-              >
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                 {mealTypes.map((type, i) => (
-                  <motion.div key={i} variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
-                    <OptionButton
-                      label={type.label}
-                      isSelected={selectedMealType.includes(type.value)}
-                      onClick={() => onMealTypeSelect(type.value)}
-                      variant="small"
-                    />
-                  </motion.div>
+                  <OptionButton
+                    key={i}
+                    label={type.label}
+                    isSelected={selectedMealType.includes(type.value)}
+                    onClick={() => {
+                      console.log("🚀 ~ toggleMealType ~ type.value:", type.value);
+                      console.log('sele',selectedMealType)
+                      toggleMealType(type.value);
+                    }}
+                    variant="small"
+                  />
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
           )}
         </div>
 
-        {/* Price display */}
+        {/* ---------------- PRICE ---------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -241,24 +236,21 @@ const Step3: React.FC<Step3Props> = ({
           className="mt-6 sm:mt-8 bg-black text-white rounded-lg px-3 sm:px-4 py-2 sm:py-3 w-fit flex items-center gap-2"
         >
           <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="font-medium text-sm sm:text-base">₹ 0.00</span>
+          <span className="font-medium text-sm sm:text-base">
+            ₹ {price.toFixed(2)}
+          </span>
         </motion.div>
 
-        {/* Navigation buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="flex items-center justify-between mt-6 sm:mt-8"
-        >
+        {/* ---------------- NAVIGATION ---------------- */}
+        <motion.div className="flex items-center justify-between mt-6 sm:mt-8">
           <button
-            onClick={onBack}
+            onClick={prevStep}
             className="bg-white text-gray-700 p-2 sm:p-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button
-            onClick={onNext}
+            onClick={nextStep}
             disabled={!selectedMealType || selectedMealType.length === 0}
             className="bg-white text-gray-700 p-2 sm:p-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
           >

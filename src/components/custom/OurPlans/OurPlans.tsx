@@ -1,17 +1,40 @@
-import React from "react";
+// components/OurPlans.tsx
+"use client";
+import React, { useEffect } from "react";
 import PlanCard from "./PlanCard";
 import Link from "next/link";
+import { apiClient } from "@/lib/apiClient";
+import { useProgramsStore } from "@/store/useProgramStore";
 
 type Props = {};
 
 function OurPlans({}: Props) {
+  const { programs, setPrograms, setLoading, setError } = useProgramsStore();
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      setLoading(true);
+      try {
+        const res = await apiClient.get(
+          "/programs?page=1&limit=10&status=active&is_active=true"
+        );
+        setPrograms(res.data.results);
+      } catch (err) {
+        setError("Failed to fetch programs");
+        console.error("Error fetching programs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPrograms();
+  }, [setPrograms, setLoading, setError]);
+
   return (
     <div className="flex flex-col items-center gap-y-10 w-full overflow-hidden">
-      <h1 className="py-10 font-semibold text-3xl sm:text-4xli">Our Plans</h1>
-
+      <h1 className="py-10 font-semibold text-3xl sm:text-4xl">Our Plans</h1>
       <div className="relative w-full flex justify-center items-center">
         {/* WAVE BACKGROUND */}
-        <div className="absolute   top-36 left-1/2 -translate-x-1/2 z-0 hidden md:block">
+        <div className="absolute top-36 left-1/2 -translate-x-1/2 z-0 hidden md:block">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="1111"
@@ -38,31 +61,17 @@ function OurPlans({}: Props) {
             </defs>
           </svg>
         </div>
-
         {/* Plan Cards */}
         <div className="z-10 flex flex-col md:flex-row justify-center items-center gap-x-5">
-          <Link href={`/plans/${1}`}>
-            <PlanCard
-              title="Therapeutic Diet"
-              price="From: ₹ 1,500.00"
-              svg={`/assets/phone1.svg`}
-            />
-          </Link>
-          <Link href={`/plans/${2}`}>
-            <PlanCard
-              title="Customised Weight Loss/Muscle Gain Meal Plan"
-              price="From: ₹ 1,500.00"
-              svg={`/assets/phone2.svg`}
-            />
-          </Link>
-          <Link href={`/plans/${3}`}>
-            <PlanCard
-              title="Customised Diet + Workout plan"
-              price="From: ₹ 2,000.00"
-              svg={`/assets/phone3.svg`}
-              className="-left-14 bottom-0"
-            />
-          </Link>
+          {programs.map((program, index) => (
+            <Link key={program._id} href={`/plans/${program._id}`}>
+              <PlanCard
+                title={program.name}
+                price={`From: ₹ ${program.memberships[0]?.amount || ""}`}
+                svg={`/assets/phone${(index % 3) + 1}.svg`}
+              />
+            </Link>
+          ))}
         </div>
       </div>
     </div>

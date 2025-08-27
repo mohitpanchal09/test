@@ -1,5 +1,4 @@
-import ProductDetails from "@/components/custom/Product/ProductDetails";
-import RelatedProducts from "@/components/custom/Product/RelatedProducts";
+import PlainDetails from "@/components/custom/Plans/PlanDetails";
 import React from "react";
 
 
@@ -8,10 +7,9 @@ async function page({
 }: {
   params: Promise<{ planId: string }>
 }) {
-  console.log("🚀 ~ page ~ params:", params)
   return (
     <div>
-      {/* <ProductDetails /> */}
+      <PlainDetails/>
     </div>
   );
 }

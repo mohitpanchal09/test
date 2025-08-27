@@ -6,53 +6,41 @@ import StepIndicator from "./StepIndicator";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface PersonalInfoStepProps {
-  selectedGoal: string;
-  selectedGender: string | null;
-  selectedAge: string | null;
-  selectedWeight: string | null;
-  selectedHeightFeet: string | null;
-  selectedHeightInches: string | null;
-  onGenderSelect: (gender: string) => void;
-  onAgeSelect: (age: string) => void;
-  onWeightSelect: (weight: string) => void;
-  onHeightFeetSelect: (feet: string) => void;
-  onHeightInchesSelect: (inches: string) => void;
-  onBack: () => void;
-  onNext: () => void;
-}
+import { useFormStore } from "@/store/useFormStore";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 };
 
-const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
-  selectedGoal,
-  selectedGender,
-  selectedAge,
-  selectedWeight,
-  selectedHeightFeet,
-  selectedHeightInches,
-  onGenderSelect,
-  onAgeSelect,
-  onWeightSelect,
-  onHeightFeetSelect,
-  onHeightInchesSelect,
-  onBack,
-  onNext,
-}) => {
-  const genders = ["Male", "Female", "Other"];
 
-  // Local state for slider values
+
+const PersonalInfoStep: React.FC = () => {
+  const {
+    formData: {
+      goal: selectedGoal,
+      gender: selectedGender,
+      age: selectedAge,
+      weight: selectedWeight,
+      heightFeet: selectedHeightFeet,
+      heightInches: selectedHeightInches,
+    },
+    setGender,
+    setAge,
+    setWeight,
+    setHeightFeet,
+    setHeightInches,
+    prevStep,
+    nextStep,
+  } = useFormStore();
+
+  const genders = ["Male", "Female", "Other"];
   const [feetValue, setFeetValue] = React.useState<number[]>([3]);
   const [inchesValue, setInchesValue] = React.useState<number[]>([0]);
 
-  // Update parent when slider changes
   React.useEffect(() => {
-    onHeightFeetSelect(feetValue[0].toString());
-    onHeightInchesSelect(inchesValue[0].toString());
+    setHeightFeet(feetValue[0].toString());
+    setHeightInches(inchesValue[0].toString());
   }, [feetValue, inchesValue]);
 
   return (
@@ -89,12 +77,11 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
                   key={gender}
                   label={gender}
                   isSelected={selectedGender === gender}
-                  onClick={() => onGenderSelect(gender)}
+                  onClick={() => setGender(gender)}
                 />
               ))}
             </div>
           </motion.div>
-
           <div className="flex flex-wrap gap-6">
             {/* Age Selection */}
             <AnimatePresence>
@@ -114,14 +101,13 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
                       type="number"
                       placeholder="Enter Age"
                       value={selectedAge || ""}
-                      onChange={(e) => onAgeSelect(e.target.value)}
+                      onChange={(e) => setAge(e.target.value)}
                       className="w-[180px] bg-white"
                     />
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-
             {/* Weight Selection */}
             <AnimatePresence>
               {selectedAge && (
@@ -140,7 +126,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
                       type="number"
                       placeholder="Enter Weight"
                       value={selectedWeight || ""}
-                      onChange={(e) => onWeightSelect(e.target.value)}
+                      onChange={(e) => setWeight(e.target.value)}
                       className="w-[180px] bg-white"
                     />
                   </div>
@@ -148,7 +134,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
               )}
             </AnimatePresence>
           </div>
-
           {/* Height Selection */}
           <AnimatePresence>
             {selectedWeight && (
@@ -185,7 +170,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
                     </div>
                     <p className="text-sm text-gray-600 mt-1">{feetValue[0]} ft</p>
                   </div>
-
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600 mb-2">in Inches</p>
                     <div className="flex gap-4 items-center">
@@ -213,7 +197,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
             )}
           </AnimatePresence>
         </div>
-
         {/* Navigation buttons */}
         <motion.div
           className="flex items-center justify-between mt-6 sm:mt-8"
@@ -222,13 +205,13 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <button
-            onClick={onBack}
+            onClick={prevStep}
             className="bg-white text-gray-700 p-2 sm:p-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button
-            onClick={onNext}
+            onClick={nextStep}
             disabled={!selectedHeightInches}
             className="bg-white text-gray-700 p-2 sm:p-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
           >

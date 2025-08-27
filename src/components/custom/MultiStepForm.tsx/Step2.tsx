@@ -4,20 +4,10 @@ import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import StepIndicator from "./StepIndicator";
 import OptionButton from "./OptionButton";
+import { useFormStore } from "@/store/useFormStore";
 
-interface Step2Props {
-  selectedGoal: string;
-  selectedDiet: string | null;
-  onDietSelect: (diet: string) => void;
-  onContinue: () => void;
-}
-
-const Step2: React.FC<Step2Props> = ({
-  selectedGoal,
-  selectedDiet,
-  onDietSelect,
-  onContinue,
-}) => {
+const Step2: React.FC = () => {
+  const { formData, setDiet, nextStep } = useFormStore();
   const diets = [
     "Balanced Diet",
     "Keto Diet",
@@ -40,7 +30,7 @@ const Step2: React.FC<Step2Props> = ({
           WebkitBackdropFilter: "blur(20px)",
         }}
       >
-        <StepIndicator currentStep={2} totalSteps={4} />
+        <StepIndicator currentStep={formData.currentStep} totalSteps={4} />
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-left mb-2">
           Your Food Delivery Plan
         </h1>
@@ -54,7 +44,7 @@ const Step2: React.FC<Step2Props> = ({
             transition={{ delay: 0.2 }}
             className="bg-green-100 border border-green-300 rounded-lg px-3 sm:px-4 py-2 text-green-800 font-medium text-sm sm:text-base"
           >
-            {selectedGoal}
+            {formData.goal}
           </motion.div>
         </div>
         <div className="mb-8">
@@ -79,12 +69,12 @@ const Step2: React.FC<Step2Props> = ({
               <motion.div key={diet} variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
                 <OptionButton
                   label={diet}
-                  isSelected={selectedDiet === diet}
-                  onClick={() => onDietSelect(diet)}
+                  isSelected={formData.diet === diet}
+                  onClick={() => setDiet(diet)}
                 />
               </motion.div>
             ))}
-            {selectedDiet === "Balanced Diet" && (
+            {formData.diet === "Balanced Diet" && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -100,8 +90,8 @@ const Step2: React.FC<Step2Props> = ({
           </motion.div>
         </div>
         <button
-          onClick={onContinue}
-          disabled={!selectedDiet}
+          onClick={nextStep}
+          disabled={!formData.diet}
           className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-medium text-base sm:text-lg transition-all duration-200 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           Continue

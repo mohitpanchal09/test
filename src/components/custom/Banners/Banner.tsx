@@ -2,12 +2,43 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap"; // ✅ Import GSAP
+import gsap from "gsap";
+import axios from "axios";
+import { useCartStore } from "@/store/useCartStore";
 
 const Banner: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
-  // Use div wrappers for refs instead of Next <Image />
+  const setCart = useCartStore((state) => state.setCart);
+
+  useEffect(() => {
+    const getSession = async () => {
+      try {
+        // fetch session id from your Next.js API route
+        const res = await fetch("/api/guest-session");
+        const data = await res.json();
+        setSessionId(data.sessionId);
+
+        // fetch cart data from backend
+        const cartRes = await axios.get(
+          `https://parafit-backend.onrender.com/api/v1/guest-cart/${data.sessionId}`
+        );
+
+        if (cartRes.data?.success && cartRes.data?.data) {
+          setCart(cartRes.data.data); // store cart data in Zustand
+        }
+
+        console.log("🚀 ~ Cart Response:", cartRes.data);
+      } catch (err) {
+        console.error("Failed to fetch session ID or cart:", err);
+      }
+    };
+
+    getSession();
+  }, [setCart]);
+
+  // refs for GSAP animations
   const veggieRef1 = useRef<HTMLDivElement>(null);
   const veggieRef2 = useRef<HTMLDivElement>(null);
 

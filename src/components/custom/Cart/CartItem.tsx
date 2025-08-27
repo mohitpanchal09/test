@@ -1,5 +1,6 @@
 import React from "react";
 import QuantityControls from "./QuantityControl";
+import { Button } from "@/components/ui/button";
 
 interface CartItemProps {
   id: string;
@@ -9,6 +10,8 @@ interface CartItemProps {
   image: string;
   onQuantityChange: (id: string, quantity: number) => void;
   onRemove: (id: string) => void;
+  type: string;
+  total_price: number;
 }
 
 const CartItem: React.FC<CartItemProps> = ({
@@ -19,6 +22,8 @@ const CartItem: React.FC<CartItemProps> = ({
   image,
   onQuantityChange,
   onRemove,
+  type,
+  total_price,
 }) => {
   return (
     <div className="border-b border-gray-200 py-6 last:border-b-0">
@@ -32,27 +37,30 @@ const CartItem: React.FC<CartItemProps> = ({
           />
           <div>
             <h3 className="font-medium text-gray-900">{name}</h3>
-            <button
+            <Button
               onClick={() => onRemove(id)}
-              className="text-sm text-gray-500 hover:text-red-500 transition-colors duration-200 mt-1"
+              className="text-sm text-gray-500 hover:text-red-500 transition-colors duration-200 mt-1 cursor-pointer"
+              variant={"outline"}
             >
               Remove
-            </button>
+            </Button>
           </div>
         </div>
         <div className="lg:col-span-2 text-gray-900 font-medium">
-          ₹{price.toFixed(2)}
+          {/* ₹{total_price.toFixed(2)} */}
         </div>
         <div className="lg:col-span-3 flex justify-center">
-          <QuantityControls
-            quantity={quantity}
-            onQuantityChange={(newQuantity) =>
-              onQuantityChange(id, newQuantity)
-            }
-          />
+          {type == "product" && (
+            <QuantityControls
+              quantity={quantity}
+              onQuantityChange={(newQuantity) =>
+                onQuantityChange(id, newQuantity)
+              }
+            />
+          )}
         </div>
         <div className="lg:col-span-2 text-right text-gray-900 font-medium">
-          ₹{(price * quantity).toFixed(2)}
+          ₹{total_price.toFixed(2)}
         </div>
       </div>
 
@@ -67,23 +75,26 @@ const CartItem: React.FC<CartItemProps> = ({
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-gray-900 truncate">{name}</h3>
             <p className="text-gray-600 text-sm mt-1">₹{price.toFixed(2)}</p>
-            <button
+            <Button
               onClick={() => onRemove(id)}
-              className="text-sm text-gray-500 hover:text-red-500 transition-colors duration-200 mt-2"
+              className="text-sm text-gray-500 hover:text-red-500 transition-colors duration-200 mt-1 cursor-pointer"
+              variant={"outline"}
             >
               Remove
-            </button>
+            </Button>
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <QuantityControls
-            quantity={quantity}
-            onQuantityChange={(newQuantity) =>
-              onQuantityChange(id, newQuantity)
-            }
-          />
+          {type == "product" && (
+            <QuantityControls
+              quantity={quantity}
+              onQuantityChange={(newQuantity) =>
+                onQuantityChange(id, newQuantity)
+              }
+            />
+          )}
           <div className="text-lg font-medium text-gray-900">
-            ₹{(price * quantity).toFixed(2)}
+            ₹{total_price.toFixed(2)}
           </div>
         </div>
       </div>

@@ -1,13 +1,22 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import CityAndPincode from "./CityAndPincode";
 import MultiStepForm from "./MultiStepForm";
+import { MealSubscription, useMealSubscriptionsStore } from "@/store/useMealSubscriptionStore";
 
-type Props = {};
+function Form({ data }: { data: MealSubscription[] }) {
+  const { setSubscriptions } = useMealSubscriptionsStore();
 
-function Form({}: Props) {
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setSubscriptions(data);
+    }
+  }, [data, setSubscriptions]);
+
   return (
     <div className="relative flex flex-col justify-center items-center py-5 md:py-20">
-      {/* Blurred Gradient Circle */}
+       {/* Blurred Gradient Circle */}
       <div
         className="absolute z-0"
         style={{

@@ -8,6 +8,7 @@ interface OptionButtonProps {
   isSelected: boolean;
   onClick: () => void;
   variant?: "default" | "small";
+  disabled?: boolean;
 }
 
 const OptionButton: React.FC<OptionButtonProps> = ({
@@ -15,10 +16,12 @@ const OptionButton: React.FC<OptionButtonProps> = ({
   isSelected,
   onClick,
   variant = "default",
+  disabled = false,
 }) => {
   return (
     <Button
       onClick={onClick}
+      disabled={disabled}
       className={`
         w-full  min-h-[48px] rounded-sm font-medium border transition-all duration-200 text-xs z-50
         text-center cursor-pointer whitespace-normal break-words leading-snug

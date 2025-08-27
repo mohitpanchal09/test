@@ -8,21 +8,47 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useState } from "react";
+import { useFormStore } from "@/store/useFormStore";
+import { useMealSubscriptionsStore } from "@/store/useMealSubscriptionStore";
+import React, { useMemo, useState } from "react";
 
-type Props = {};
+function CityAndPincode() {
+  const { subscriptions } = useMealSubscriptionsStore();
+  const setSelectedClusterId = useFormStore(
+    (state) => state.setSelectedClusterId
+  );
+  const setSelectedSubscription = useFormStore(
+    (state) => state.setSelectedSubscription
+  );
+  const {selectedSubscription} = useFormStore((state) => state.formData);
+  console.log("🚀 ~ CityAndPincode ~ selectedSubscription:", selectedSubscription)
 
-// Cities data array
-const cities = [
-  { label: "Delhi", value: "delhi" },
-  { label: "Mumbai", value: "mumbai" },
-  { label: "Bangalore", value: "bangalore" },
-  { label: "Kolkata", value: "kolkata" },
-  { label: "Chennai", value: "chennai" },
-];
+  // store the selected cluster ID
+  const [selectedCluster, setSelectedCluster] = useState("");
 
-function CityAndPincode({}: Props) {
-  const [selectedCity, setSelectedCity] = useState("");
+  // derive unique cities from subscriptions
+  const cities = useMemo(() => {
+    const unique = new Map<string, string>();
+    subscriptions.forEach((sub) => {
+      if (sub.cluster_id?.city) {
+        unique.set(sub.cluster_id._id, sub.cluster_id.city);
+      }
+    });
+    return Array.from(unique, ([value, label]) => ({ value, label }));
+  }, [subscriptions]);
+
+  // handle selection change
+  const handleCityChange = (clusterId: string) => {
+    setSelectedCluster(clusterId);      // update local state
+    setSelectedClusterId(clusterId);    // update Zustand store
+
+    const firstSubscription = subscriptions.find(
+      (sub) => sub.cluster_id?._id === clusterId
+    );
+    if (firstSubscription) {
+      setSelectedSubscription(firstSubscription); // ✅ auto-pick subscription
+    }
+  };
 
   return (
     <div className="flex flex-col gap-y-8 items-center justify-center px-4 py-8 z-10">
@@ -44,7 +70,7 @@ function CityAndPincode({}: Props) {
 
         {/* City Selection Section */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-          <Select onValueChange={(value) => setSelectedCity(value)}>
+          <Select onValueChange={handleCityChange} value={selectedCluster}>
             <SelectTrigger className="w-full sm:w-48 shadow-lg bg-white">
               <SelectValue placeholder="Select city" />
             </SelectTrigger>

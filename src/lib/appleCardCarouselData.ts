@@ -32,7 +32,7 @@ export const appleCardCarouselData:AppleCardProps[] = [
   },
 
   {
-    category: "Maps for your iPhone 15 Pro Max.",
+    category: "Herbal Teas",
     title: "More Than",
     src: "/assets/home-page-parashop/img4.png",
     // content: <DummyContent />,

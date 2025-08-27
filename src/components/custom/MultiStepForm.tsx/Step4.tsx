@@ -6,33 +6,63 @@ import { Input } from "@/components/ui/input";
 import StepIndicator from "./StepIndicator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { useFormStore } from "@/store/useFormStore";
+import { useCartStore } from "@/store/useCartStore";
+import { apiClient } from "@/lib/apiClient";
+import { useRouter } from "next/navigation";
+import { getSessionId } from "@/app/actions/session";
 
-interface Step4Props {
-  name: string | null;
-  phone: string | null;
-  email: string | null;
-  state: string | null;
-  onNameChange: (name: string) => void;
-  onPhoneChange: (phone: string) => void;
-  onEmailChange: (email: string) => void;
-  onStateChange: (state: string) => void;
-  onBack: () => void;
-  onNext: () => void;
-}
+const Step4: React.FC = () => {
+  const {
+    formData: { name, phone, email, state },
+    setName,
+    setPhone,
+    setEmail,
+    setState,
+    prevStep,
+    nextStep,
+  } = useFormStore();
+  const { cart, setCart } = useCartStore();
+  const { formData } = useFormStore();
+  const router = useRouter();
 
-const Step4: React.FC<Step4Props> = ({
-  name,
-  phone,
-  email,
-  state,
-  onNameChange,
-  onPhoneChange,
-  onEmailChange,
-  onStateChange,
-  onBack,
-  onNext,
-}) => {
   const states = ["Delhi NCR", "Bangalore", "Mumbai"];
+
+  const handleNext = async () => {
+    try {
+      // Prepare the payload
+      const payload = {
+        item_type: "meal_subscription",
+        item_details: {
+          meal_subscription_id: formData.selectedSubscription?.id,
+          duration_value: parseInt(formData.duration || "0"),
+          selected_meals: formData.mealType.map((mealType) => ({
+            meal_time: mealType, // Adjust as per your logic
+            meal_type: formData.dietType || "veg", // Adjust as per your logic
+          })),
+        },
+      };
+
+      const sessionId = await getSessionId()
+      console.log("🚀 ~ handleNext ~ sessionId:", sessionId)
+
+      // Call the API
+      const response = await apiClient.post(`/guest-cart/${sessionId}`,
+        payload
+      );
+      console.log("🚀 ~ handleNext ~ response:", response.data.data)
+
+      if (response.data) {
+        console.log("Item added to cart:", response.data);
+        // Update the cart in Zustand
+        setCart(response.data.data);
+        // Redirect to cart page
+        router.push("/cart");
+      }
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -58,7 +88,7 @@ const Step4: React.FC<Step4Props> = ({
             <Input
               type="text"
               value={name || ""}
-              onChange={(e) => onNameChange(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Name"
               className="bg-white"
             />
@@ -71,7 +101,7 @@ const Step4: React.FC<Step4Props> = ({
             <Input
               type="tel"
               value={phone || ""}
-              onChange={(e) => onPhoneChange(e.target.value)}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone"
               className="bg-white"
             />
@@ -84,12 +114,12 @@ const Step4: React.FC<Step4Props> = ({
             <Input
               type="email"
               value={email || ""}
-              onChange={(e) => onEmailChange(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Address"
               className="bg-white"
             />
           </motion.div>
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -111,7 +141,7 @@ const Step4: React.FC<Step4Props> = ({
             >
               <RadioGroup
                 value={state || ""}
-                onValueChange={onStateChange}
+                onValueChange={setState}
                 className="flex gap-6"
               >
                 {states.map((s) => (
@@ -126,7 +156,7 @@ const Step4: React.FC<Step4Props> = ({
                 ))}
               </RadioGroup>
             </motion.div>
-          </motion.div>
+          </motion.div> */}
         </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -135,13 +165,13 @@ const Step4: React.FC<Step4Props> = ({
           className="flex justify-between mt-6"
         >
           <button
-            onClick={onBack}
+            onClick={prevStep}
             className="bg-white text-gray-700 p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
           >
             <ArrowLeft />
           </button>
           <button
-            onClick={onNext}
+            onClick={handleNext}
             className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
           >
             <ArrowRight />
