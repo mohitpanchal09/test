@@ -8,12 +8,12 @@ import { motion, AnimatePresence } from "framer-motion";
 type Props = {};
 
 const images = [
-  "/assets/why-us/dish1.png",
-  "/assets/why-us/dish2.png",
-  "/assets/why-us/dish3.png",
-  "/assets/why-us/dish4.png",
-  "/assets/why-us/dish1.png",
-  "/assets/why-us/dish2.png",
+  "/assets/why-us/why1.png",
+  "/assets/why-us/why2.png",
+  "/assets/why-us/why3.png",
+  "/assets/why-us/why4.png",
+  "/assets/why-us/why5.png",
+  "/assets/why-us/why6.png",
 ];
 
 const texts = [

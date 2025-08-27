@@ -35,7 +35,7 @@ export type PartnerWithUsProps = {
   Icon: LucideIcon;
   title: string;
   desc: string;
-  number:number
+  number: number
 };
 
 export type Feature = {
@@ -88,11 +88,19 @@ export type BannerCarouselProps = {
 
 export type FoodStripeProps = {
   title: string;
+  titleColor?: string;
   bgColor: string;
   leftImage: string | null;
   rightMainImage: string;
   rightTopRightImage: string;
   rightBottomLeftImage: string
+  rightTopLeftImage?: string | null
+  stripeHeight?: string
+  stopSpin?: boolean
+  fontWeight?: string
+  highlightWords?: string[]
+  highlightColor?: string
+
 }
 
 export type AppleCardProps = {

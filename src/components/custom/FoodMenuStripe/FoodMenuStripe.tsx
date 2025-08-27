@@ -11,10 +11,19 @@ function FoodMenuStripe({
   rightMainImage,
   rightTopRightImage,
   rightBottomLeftImage,
+  rightTopLeftImage,
+  stripeHeight,
+  stopSpin = false,
+  titleColor,
+  fontWeight,
+  highlightWords,
+  highlightColor,
 }: FoodStripeProps) {
   return (
     <div
-      className={`${bgColor} flex flex-col md:flex-row my-10 md:my-30 h-fit md:h-[300px] p-15 md:p-20 items-center relative`}
+      className={`${bgColor} flex flex-col md:flex-row my-10 md:my-30 h-fit ${
+        stripeHeight ? stripeHeight : "md:h-[300px]"
+      } p-15 md:p-20 items-center relative`}
     >
       {/* LEFT TEXT */}
       <motion.div
@@ -24,8 +33,20 @@ function FoodMenuStripe({
         exit={{ x: -100, opacity: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-medium text-center md:text-left z-20">
-          {title}
+        <h1
+          className={`${titleColor} text-3xl sm:text-4xl md:text-5xl lg:text-[55px] ${fontWeight} text-center md:text-left z-20`}
+        >
+          {title.split(" ").map((word, i) =>
+            highlightWords?.includes(
+              word.replace(/[^a-zA-Z]/g, "").toLowerCase()
+            ) ? (
+              <span key={i} className={`${highlightColor}`}>
+                {word}{" "}
+              </span>
+            ) : (
+              word + " "
+            )
+          )}
         </h1>
       </motion.div>
 
@@ -47,6 +68,25 @@ function FoodMenuStripe({
               ease: "easeInOut",
             }}
             className="absolute top-0 -right-20 -z-0 pointer-events-none"
+          >
+            <Image
+              src={rightTopRightImage}
+              alt="flying-vegies"
+              height={500}
+              width={500}
+            />
+          </motion.div>
+        )}
+
+        {rightTopLeftImage && (
+          <motion.div
+            animate={{ y: [0, -20, 0] }} // floating up and down
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-0 -left-20 -z-0 pointer-events-none"
           >
             <Image
               src={rightTopRightImage}
@@ -79,7 +119,7 @@ function FoodMenuStripe({
 
         {/* Main image with continuous rotation */}
         <motion.div
-          animate={{ rotate: 360 }}
+          animate={stopSpin ? {} : { rotate: 360 }}
           transition={{
             repeat: Infinity,
             duration: 12, // rotation speed
@@ -90,8 +130,8 @@ function FoodMenuStripe({
           <Image
             src={rightMainImage}
             alt="main"
-            height={500}
-            width={500}
+            height={stopSpin ? 1000 : 500}
+            width={stopSpin ? 1000 : 500}
             className="mx-auto"
           />
         </motion.div>

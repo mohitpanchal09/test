@@ -77,7 +77,7 @@ function ProductDetails({ product }: Props) {
               </div>
             </div>
             {/* Product Info */}
-            <div className="p-8 lg:p-12">
+            <div className="p-8 lg:p-12 z-10">
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 {product.name}
               </h1>
@@ -100,7 +100,7 @@ function ProductDetails({ product }: Props) {
                   type="number"
                   value={quantity}
                   onChange={handleQuantityChange}
-                  className="w-16 h-12 text-center text-xl font-semibold border-2 border-gray-200 rounded-lg focus:border-green-500"
+                  className="w-16 h-12 text-center text-xl font-semibold border-2 border-gray-200 rounded-lg focus:border-green-500 bg-white"
                   min="1"
                 />
                 <button
