@@ -37,7 +37,7 @@ const fadeUp = {
 
 function Page({}: Props) {
   return (
-    <div>
+    <div className="overflow-hidden">
       <motion.div
         variants={fadeUp}
         initial="hidden"

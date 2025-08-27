@@ -83,22 +83,20 @@ function WhyUs({}: Props) {
     <div className=" flex flex-col space-y-2 lg:space-y-20 mt-20 md:-mt-20 lg:mt-40 ">
 
       <div
-        className="absolute top-[50%] -z-0"
+        className="absolute top-[50%] -z-0 w-0 lg:w-[1299px]"
         style={{
           borderRadius: "63px",
           opacity: "0.2",
           background: "linear-gradient(273deg, #B3FF00 4.89%, #02803E 90.8%)",
           filter: "blur(200px)",
-          width: "1299px",
           height: "509px",
           zIndex:"20"
         }}
       />
       {/* Main Background Gradient */}
       <div
-        className="absolute -z-0"
+        className="absolute -z-0 w-0 lg:w-[1299px]"
         style={{
-          width: "1299px",
           height: "509px",
           borderRadius: "63px",
           opacity: 0.2,

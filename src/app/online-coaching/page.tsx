@@ -41,7 +41,7 @@ const AnimatedSection: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
 function Page({}: Props) {
   return (
-    <div className="flex flex-col justify-center py-5 lg:py-10">
+    <div className="flex flex-col justify-center py-5 lg:py-10 overflow-hidden">
        <AnimatedSection>
       <div className="flex flex-col justify-center items-center gap-y-2 lg:gap-y-4">
         <h1 className="font-semibold text-center text-xl sm:text-3xl md:text-4xl lg:text-5xl">
