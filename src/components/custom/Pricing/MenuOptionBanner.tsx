@@ -43,14 +43,15 @@ function MenuOptionBanner({ isActive = 1 }: Props) {
         transition={{ duration: 0.8, ease: "easeInOut" }}
         className="flex-1/3 lg:flex-1 relative"
       >
-        <Image
+       
+      </motion.div>
+       <Image
           src={`/assets/pricing/img1.png`}
           alt="man"
           height={100}
           width={500}
-          className="absolute top-0 right-0 h-full w-auto bg-black/50 sm:bg-black/0"
+          className="absolute top-0 right-0 h-full w-auto object-cover lg:object-contain"
         />
-      </motion.div>
     </div>
   );
 }
