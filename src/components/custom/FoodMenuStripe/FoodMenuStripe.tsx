@@ -34,7 +34,7 @@ function FoodMenuStripe({
         transition={{ duration: 0.8 }}
       >
         <h1
-          className={`${titleColor} text-3xl sm:text-4xl md:text-5xl lg:text-[55px] ${fontWeight} text-center md:text-left z-20`}
+          className={`${titleColor} text-3xl sm:text-4xl md:text-5xl lg:text-[55px] ${fontWeight} text-center md:text-left z-50`}
         >
           {title.split(" ").map((word, i) =>
             highlightWords?.includes(

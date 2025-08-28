@@ -40,5 +40,23 @@ export const appleCardCarouselData:AppleCardProps[] = [
     subText:"Just a Dip..",
     desc:"Protein-rich, clean-ingredient dips that turn snacking into a guilt-free experience."
   },
+  {
+    category: "Juices",
+    title: "More Than",
+    src: "/assets/home-page-parashop/img4.png",
+    // content: <DummyContent />,
+    bgColor:"#FFFF00",
+    subText:"Just a Dip..",
+    desc:"Protein-rich, clean-ingredient dips that turn snacking into a guilt-free experience."
+  },
+  {
+    category: "Smoothies",
+    title: "More Than",
+    src: "/assets/home-page-parashop/img4.png",
+    // content: <DummyContent />,
+    bgColor:"#008000",
+    subText:"Just a Dip..",
+    desc:"Protein-rich, clean-ingredient dips that turn snacking into a guilt-free experience."
+  },
   
 ];
