@@ -4,6 +4,7 @@ import DietTypes from "./DietTypes";
 import VegNonVegSection from "./NonVegSection";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function CustomizedDiets() {
   return (
@@ -66,9 +67,12 @@ export default function CustomizedDiets() {
 
       {/* Button */}
       <div className="text-center mt-8">
+        <Link href={'/food-menu'}>
+
         <button className="bg-white text-green-600 px-6 py-3 rounded-2xl font-semibold hover:bg-green-100 hover:text-black cursor-pointer transition">
           View Full Menu
         </button>
+        </Link>
       </div>
     </div>
   );

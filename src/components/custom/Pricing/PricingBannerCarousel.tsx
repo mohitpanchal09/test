@@ -25,9 +25,9 @@ function PricingBannerCarousel() {
         <div>
           <MenuOptionBanner isActive={activeSlide === 0 ? 1 : 0} />
         </div>
-        <div>
+        {/* <div>
           <SubscribeNowBanner isActive={activeSlide === 1 ? 1 : 0} />
-        </div>
+        </div> */}
       </Slider>
     </div>
   );

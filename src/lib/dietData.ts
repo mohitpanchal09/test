@@ -37,31 +37,32 @@ export const dietTypes = [
   {
     title: "High Protein",
     subtitle: "Full Your Muscle. Feed Your Hustle.",
-    src: "/assets/customized-diets/img1.png",
+    src: "/assets/High Protein/1/img1.jpeg",
     highlight: "Power Up. Lean In.",
   },
   {
-    title: "Balanced",
+    title: "Balanced Diet",
     subtitle: "The Perfect Middle. Fully Nourished. Fully You.",
-    src: "/assets/customized-diets/img2.png",
+    src: "/assets/Balanced Diet/Veg/1/nutty oatmeal bowl(breakfast).jpg",
     highlight: "Eat Right. Feel Light.",
   },
   {
-    title: "Keto",
+    title: "Detox Diet",
     subtitle: "Healthy fats & minimal carbs",
-    src: "/assets/customized-diets/img3.png",
+    src: "/assets/Detox Diet/Veg/1/BBQ Grilled Vegetable Sandwich(lunch) .jpg",
     highlight: "Low Carb. Full Flavor",
   },
   {
-    title: "Keto",
+    title: "Keto Diet",
     subtitle: "Healthy fats & minimal carbs",
-    src: "/assets/customized-diets/img4.png",
+    src: "/assets/keto Diet/Veg/1/cauliflower keto parantha(breakfast).jpg",
     highlight: "Low Carb. Full Flavor",
   },
   {
-    title: "Keto",
+    title: "Vegan Food",
     subtitle: "Healthy fats & minimal carbs",
-    src: "/assets/customized-diets/img5.png",
+    src: "/assets/Vegan Food/1/TEMPTING TOFU LABABDAR with Roti(Dinner).jpeg",
     highlight: "Low Carb. Full Flavor",
   },
+
 ];

@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
 /* :root {
@@ -100,6 +99,26 @@ body {
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --animate-marquee: marquee var(--duration) infinite linear;
+
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
 }
 
 :root {
@@ -257,7 +276,6 @@ body {
   scroll-behavior: smooth;
 }
 
-
 .gradient-text {
   background: linear-gradient(90deg, #97FFC9 0%, #FFF 100%);
   -webkit-background-clip: text;
@@ -270,7 +288,6 @@ body {
   transition: transform 0.3s ease-in-out;
   z-index: 10;
 } */
-
 
 .diet-swiper .swiper-slide {
   transform: scale(0.8);
@@ -285,7 +302,6 @@ body {
 .diet-swiper .swiper-slide-prev {
   transform: scale(0.9); /* Adjacent slides slightly bigger */
 }
-
 
 @keyframes spin {
   from {

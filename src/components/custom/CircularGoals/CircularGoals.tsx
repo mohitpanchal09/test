@@ -19,7 +19,7 @@ function CircularGoals({}: Props) {
 
   return (
     <div
-      className="flex flex-col items-center justify-center lg:flex-row min-h-[90vh] sm:min-h-[130vh] lg:min-h-[120vh] overflow-hidden relative"
+      className="flex flex-col items-center justify-center lg:flex-row min-h-[90vh] sm:min-h-[130vh] lg:min-h-[170vh] overflow-hidden relative"
       style={{
         backgroundImage: "url('/assets/circular-goals/gradient.svg')",
         backgroundSize: "cover",

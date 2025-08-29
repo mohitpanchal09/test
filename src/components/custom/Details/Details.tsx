@@ -6,11 +6,11 @@ import gsap from "gsap";
 
 function Details() {
   const veggieRef = useRef<HTMLImageElement>(null);
-  const item1 = useRef<HTMLDivElement>(null);
-  const item2 = useRef<HTMLDivElement>(null);
-  const item3 = useRef<HTMLDivElement>(null);
-  const item4 = useRef<HTMLDivElement>(null);
-  const item5 = useRef<HTMLDivElement>(null);
+  const item1 = useRef<HTMLButtonElement>(null);
+  const item2 = useRef<HTMLButtonElement>(null);
+  const item3 = useRef<HTMLButtonElement>(null);
+  const item4 = useRef<HTMLButtonElement>(null);
+  const item5 = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
     // Animate all cards one by one
@@ -56,7 +56,7 @@ function Details() {
         y: -10,
         duration: 0.15,
         delay: 2,
-        ease: "power1.inOut",
+        // ease: "power1.inOut",
         yoyo: true,
         repeat: 1,
       });
@@ -87,7 +87,7 @@ function Details() {
         y: -10,
         duration: 0.15,
         delay: 2.4,
-        ease: "power1.inOut",
+        // ease: "power1.inOut",
         yoyo: true,
         repeat: 1,
       });
@@ -117,7 +117,7 @@ function Details() {
         y: -10,
         duration: 0.15,
         delay: 2.4,
-        ease: "power1.inOut",
+        // ease: "power1.inOut",
         yoyo: true,
         repeat: 1,
       });
@@ -147,7 +147,7 @@ function Details() {
         y: -10,
         duration: 0.15,
         delay: 2.4,
-        ease: "power1.inOut",
+        // ease: "power1.inOut",
         yoyo: true,
         repeat: 1,
       });

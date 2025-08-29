@@ -49,7 +49,6 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
 
   return (
     <div className="relative w-full h-[90vh] md:min-h-[600px] overflow-hidden banner-carousel">
-      
       <style jsx>{`
         .banner-carousel .slick-dots {
           bottom: 24px;
@@ -89,57 +88,85 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
                     {/* Text Content with motion */}
                     <motion.div
                       className="flex-1 max-w-xl text-center lg:text-left"
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={
-                        isActive
-                          ? { opacity: 1, x: 0 }
-                          : { opacity: 0, x: -100 }
-                      }
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                      initial="hidden"
+                      animate={isActive ? "visible" : "hidden"}
+                      variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                          opacity: 1,
+                          transition: {
+                            duration: 0.8,
+                            ease: "easeInOut",
+                            staggerChildren: 0.3, // 👈 delay between children
+                          },
+                        },
+                      }}
                     >
-                      <h1
+                      <motion.h1
                         className={`text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold ${
                           banner.textColor || "text-white"
                         } leading-tight mb-4 lg:mb-6`}
+                        variants={{
+                          hidden: { opacity: 0, y: 20 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                        transition={{ duration: 0.6 }}
                       >
                         {banner.title}
-                      </h1>
-                      <p
+                      </motion.h1>
+
+                      <motion.p
                         className={`text-base md:text-lg lg:text-xl ${
                           banner.textColor || "text-white"
                         } opacity-90 mb-6 lg:mb-8 leading-relaxed max-w-md mx-auto lg:mx-0`}
+                        variants={{
+                          hidden: { opacity: 0, y: 20 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                        transition={{ duration: 0.6 }}
                       >
                         {banner.subtitle}
-                      </p>
-                      <Button
-                        className={`${banner.btnBg} min-w-[200px] h-12`}
-                        variant={"subscription"}
+                      </motion.p>
+
+                      <motion.div
+                        variants={{
+                          hidden: { opacity: 0, y: 20 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                        transition={{ duration: 0.6 }}
                       >
-                        {banner.buttonText}
-                      </Button>
+                        <Button
+                          className={`${banner.btnBg} min-w-[200px] h-12`}
+                          variant={"subscription"}
+                        >
+                          {banner.buttonText}
+                        </Button>
+                      </motion.div>
                     </motion.div>
 
                     {/* Product Image with motion */}
-                    <motion.div
-                      className="flex-1 max-w-sm md:max-w-md lg:max-w-lg justify-center items-center"
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={
-                        isActive
-                          ? { opacity: 1, x: 0 }
-                          : { opacity: 0, x: 100 }
-                      }
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
-                    >
-                      <div className="relative">
-                        <Image
-                          src={banner.imagePath}
-                          alt="Product"
-                          className="w-full h-full object-contain drop-shadow-2xl"
-                          height={300}
-                          width={300}
-                        />
-                      </div>
-                    </motion.div>
+                    <div className="flex-1 max-w-sm md:max-w-md lg:max-w-lg justify-center items-center ">
+                      <motion.div
+                        className=""
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={
+                          isActive
+                            ? { opacity: 1, scale: 1 }
+                            : { opacity: 0, scale: 0 }
+                        }
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                      >
+                        <div className="relative">
+                          <Image
+                            src={banner.imagePath}
+                            alt="Product"
+                            className="w-full h-full object-contain drop-shadow-2xl"
+                            height={300}
+                            width={300}
+                          />
+                        </div>
+                      </motion.div>
+                    </div>
                   </div>
                 </div>
               </div>

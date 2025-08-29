@@ -16,7 +16,7 @@ export default function DietTypeCard({
   subtitle,
 }: DietTypeCardProps) {
   return (
-    <div className="relative w-64 h-80 mt-20">
+    <div className="relative w-80 h-80 mt-50">
       {/* Background shape */}
       <Image
         src="/assets/customized-diets/diet-type.svg"
@@ -24,14 +24,15 @@ export default function DietTypeCard({
         fill
         style={{
           objectFit: "contain",
-          transform: "scale(1.5)",
+          transform: "scale(1.7)",
           transformOrigin: "center",
         }}
+        className=""
       />
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
-        <span className="text-[#B3FF00] mb-[20px] font-semibold text-sm">
+        <span className="text-[#B3FF00]  font-semibold text-sm">
           {highlight}
         </span>
         <Image
@@ -39,10 +40,10 @@ export default function DietTypeCard({
           height={120}
           width={120}
           alt={title}
-          className="rounded-lg h-[80%] w-[80%]"
+          className="rounded-2xl h-[130%] w-[80%] m-5"
         />
-        <h3 className="text-lg font-[700] text-white">{title}</h3>
-        <p className="text-xs text-white font-[300]">{subtitle}</p>
+        <h3 className="text-2xl font-[700] text-white">{title}</h3>
+        <p className="text-[15px] text-white ">{subtitle}</p>
       </div>
     </div>
   );

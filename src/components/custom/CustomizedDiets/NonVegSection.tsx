@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import Image from "next/image";
 import DietCard from "./DietCard";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export default function VegNonVegSection() {
   const [selected, setSelected] = React.useState<"veg" | "non-veg">("veg");
   return (
-    <div className="relative w-full mt-8 flex flex-col items-center">
+    <div className="relative w-full mt-60 flex flex-col items-center">
       {/* Desktop */}
       <div className="relative w-[95%] max-w-6xl hidden lg:block">
         <Image
@@ -21,9 +21,9 @@ export default function VegNonVegSection() {
         />
         <div className="absolute inset-0 flex flex-col px-4 sm:px-8 py-6">
           <div className="flex justify-between items-center w-full mb-6 sm:mb-10">
-            <div className="flex-1 text-white text-xl sm:text-3xl font-bold flex items-center justify-center">
+            <div className="flex-1 text-white text-xl sm:text-3xl font-bold h-16 flex items-center justify-between bg-white/10 rounded-lg  border-[0.5px] border-white mr-20">
               <Button
-                className={`cursor-pointer text-lg min-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg border border-white flex items-center ${selected === "veg" ? "bg-white/20" : ""}`}
+                className={`cursor-pointer text-lg min-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg  flex items-center ${selected=="veg" ? "border":""}`}
                 style={{
                   background: "rgba(255, 255, 255, 0.10)",
                 }}
@@ -31,11 +31,8 @@ export default function VegNonVegSection() {
               >
                 Veg
               </Button>
-            </div>
-                        <div className="flex-1 text-white text-xl sm:text-3xl font-bold flex items-center justify-center">
-
-             <Button
-                className={`flex-1 cursor-pointer text-lg max-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg border border-white flex items-center ${selected === "non-veg" ? "bg-white/20" : ""}`}
+              <Button
+                className={`flex-1 cursor-pointer text-lg max-w-[200px] text-center text-white mx-auto h-12 w-fit p-2 rounded-lg  flex items-center ${selected=="non-veg" ? "border":""}`}
                 style={{
                   background: "rgba(255, 255, 255, 0.10)",
                 }}
@@ -44,7 +41,7 @@ export default function VegNonVegSection() {
                 Non-Veg
               </Button>
             </div>
-
+            <div className="flex-1 text-white text-xl sm:text-3xl font-bold flex items-center justify-center"></div>
           </div>
           <div className="flex flex-row justify-center gap-4 sm:gap-6 mt-auto">
             {cards.map((card, idx) => (
