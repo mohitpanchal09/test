@@ -6,6 +6,154 @@ import gsap from "gsap";
 
 function Details() {
   const veggieRef = useRef<HTMLImageElement>(null);
+  const item1 = useRef<HTMLDivElement>(null);
+  const item2 = useRef<HTMLDivElement>(null);
+  const item3 = useRef<HTMLDivElement>(null);
+  const item4 = useRef<HTMLDivElement>(null);
+  const item5 = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+    // Animate all cards one by one
+    const cards = gsap.utils.toArray<HTMLDivElement>(".anim-card");
+
+    gsap.from(cards, {
+      y: 100,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power3.out",
+      stagger: 0.3, // delay between each card
+      scrollTrigger: {
+        trigger: cards[0], // start animation when first card enters viewport
+        start: "top 80%",
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (item1.current) {
+      gsap.fromTo(
+        item1.current,
+        {
+          y: -200, // start above
+          // rotate: 80, // extreme tilt start
+          opacity: 0,
+        },
+        {
+          y: 0, // land in place
+          // rotate: -18, // final tilt
+          opacity: 1,
+          duration: 2.4,
+          ease: "bounce.out", // bounce effect
+          scrollTrigger: {
+            trigger: item1.current,
+            start: "top 80%",
+          },
+        }
+      );
+
+      // subtle paper-like bounce after landing
+      gsap.to(item1.current, {
+        y: -10,
+        duration: 0.15,
+        delay: 2,
+        ease: "power1.inOut",
+        yoyo: true,
+        repeat: 1,
+      });
+    }
+    if (item2.current) {
+      gsap.fromTo(
+        item2.current,
+        {
+          y: -200, // start above
+          // rotate: 80, // extreme tilt start
+          opacity: 0,
+        },
+        {
+          y: 0, // land in place
+          // rotate: -18, // final tilt
+          opacity: 1,
+          duration: 2.2,
+          ease: "bounce.out", // bounce effect
+          scrollTrigger: {
+            trigger: item2.current,
+            start: "top 80%",
+          },
+        }
+      );
+
+      // subtle paper-like bounce after landing
+      gsap.to(item2.current, {
+        y: -10,
+        duration: 0.15,
+        delay: 2.4,
+        ease: "power1.inOut",
+        yoyo: true,
+        repeat: 1,
+      });
+    }if (item3.current) {
+      gsap.fromTo(
+        item3.current,
+        {
+          y: -200, // start above
+          // rotate: 80, // extreme tilt start
+          opacity: 0,
+        },
+        {
+          y: 0, // land in place
+          // rotate: -18, // final tilt
+          opacity: 1,
+          duration: 2.6,
+          ease: "bounce.out", // bounce effect
+          scrollTrigger: {
+            trigger: item3.current,
+            start: "top 80%",
+          },
+        }
+      );
+
+      // subtle paper-like bounce after landing
+      gsap.to(item3.current, {
+        y: -10,
+        duration: 0.15,
+        delay: 2.4,
+        ease: "power1.inOut",
+        yoyo: true,
+        repeat: 1,
+      });
+    }if (item4.current) {
+      gsap.fromTo(
+        item4.current,
+        {
+          y: -200, // start above
+          // rotate: 80, // extreme tilt start
+          opacity: 0,
+        },
+        {
+          y: 0, // land in place
+          // rotate: -18, // final tilt
+          opacity: 1,
+          duration: 2.4,
+          ease: "bounce.out", // bounce effect
+          scrollTrigger: {
+            trigger: item4.current,
+            start: "top 80%",
+          },
+        }
+      );
+
+      // subtle paper-like bounce after landing
+      gsap.to(item4.current, {
+        y: -10,
+        duration: 0.15,
+        delay: 2.4,
+        ease: "power1.inOut",
+        yoyo: true,
+        repeat: 1,
+      });
+    }
+  }, []);
+
 
   useEffect(() => {
     if (veggieRef.current) {
@@ -32,31 +180,31 @@ function Details() {
           <div className="flex items-end relative gap-2 sm:gap-4">
             <div className="flex-1/2 flex sm:w-[267.97px] flex-col justify-end h-full">
               <div className="absolute -top-20 sm:-top-9">
-                <button className="rotate-[-45deg] border-2 border-black rounded-full py-1 px-2 m-2 text-xs sm:text-sm md:text-base">
+                <button className="rotate-[-45deg] border-2 border-black rounded-full py-1 px-2 m-2 text-xs sm:text-sm md:text-base" ref={item1}>
                   Nutrition
                 </button>
-                <button className="rotate-[45deg] bg-black text-white rounded-full py-1 px-2 m-2 text-xs sm:text-sm md:text-base">
+                <button className="rotate-[45deg] bg-black text-white rounded-full py-1 px-2 m-2 text-xs sm:text-sm md:text-base" ref={item2}>
                   Results
                 </button>
                 <button className="h-[33.82px] w-[33.82px] rounded-full bg-[#02803E] opacity-30"></button>
                 <br />
-                <button className="border-2 border-black bg-white py-1 px-2 rounded-full text-xs sm:text-sm md:text-base">
+                <button className="border-2 border-black bg-white py-1 px-2 rounded-full text-xs sm:text-sm md:text-base" ref={item3}>
                   Goals
                 </button>
                 <button className="h-[33.82px] w-[33.82px] rounded-full bg-black"></button>
-                <button className="rotate-[30deg] rounded-full py-1 px-2 border-2 border-[#02803E] z-50 bg-white text-xs sm:text-sm md:text-base">
+                <button className="rotate-[30deg] rounded-full py-1 px-2 border-2 border-[#02803E] z-50 bg-white text-xs sm:text-sm md:text-base" ref={item4}>
                   Fresh Meals
                 </button>
               </div>
 
-              <Card className="sm:w-[267.97px] self-baseline bg-[#027438] p-6 text-white rounded-2xl sm:rounded-4xl sm:h-[156.1px]">
+              <Card className=" anim-card sm:w-[267.97px] self-baseline bg-[#027438] p-6 text-white rounded-2xl sm:rounded-4xl sm:h-[156.1px]">
                 <CardTitle className="font-medium text-sm sm:text-base md:text-lg leading-snug">
                   Choose your fitness goal and sign up
                 </CardTitle>
               </Card>
             </div>
 
-            <Card className="flex-1/2 sm:w-[267.97px] bg-[#02803E] p-6 text-white rounded-2xl sm:rounded-4xl h-[150px] sm:h-[253px] -z-10">
+            <Card className=" anim-card flex-1/2 sm:w-[267.97px] bg-[#02803E] p-6 text-white rounded-2xl sm:rounded-4xl h-[150px] sm:h-[253px] -z-10">
               <CardTitle className="font-medium text-sm sm:text-base md:text-lg leading-snug">
                 Fresh breakfast, lunch, snacks & dinner delivered to your
                 doorstep daily.
@@ -65,12 +213,12 @@ function Details() {
           </div>
 
           <div className="flex flex-row gap-2 sm:gap-4">
-            <Card className="flex-1 sm:w-[267.97px] bg-[#038E45] p-6 text-white rounded-2xl sm:rounded-4xl sm:min-h-[150px]">
+            <Card className=" anim-card flex-1 sm:w-[267.97px] bg-[#038E45] p-6 text-white rounded-2xl sm:rounded-4xl sm:min-h-[150px]">
               <CardTitle className="font-medium text-sm sm:text-base md:text-lg leading-snug">
                 Customise your meals & diet with your assigned ParaFit dietitian
               </CardTitle>
             </Card>
-            <Card className="flex-1 sm:w-[267.97px] bg-[#039C4C] p-6 text-white rounded-2xl sm:rounded-4xl sm:min-h-[150px]">
+            <Card className=" anim-card flex-1 sm:w-[267.97px] bg-[#039C4C] p-6 text-white rounded-2xl sm:rounded-4xl sm:min-h-[150px]">
               <CardTitle className="font-medium text-sm sm:text-base md:text-lg leading-snug">
                 Get ongoing support, follow-ups, and motivation for guaranteed
                 results.
